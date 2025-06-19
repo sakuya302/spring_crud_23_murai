@@ -8,12 +8,13 @@
 
 <body class="admin user_list">
 	<h3>社員一覧画面</h3>
+	
 	<!-- セッション中にユーザ情報が存在する場合のみ以下の処理を実行する。 -->
     <!-- なお、セッション中のユーザ情報がない（null）の場合、-->
     <!-- フィルターの処理により、当該Thymeleaf処理完了後にログイン画面にリダイレクトする。 -->
 	<!-- ***管理者権限表示*** -->
 	<!-- ***trueを書き換えること*** -->
-	<th:block th:if="true">
+	<th:block th:if="${session.emps == null}">
 		<div class="regist_link">
 			<a th:href="@{/regist/input}">新規社員登録</a>
 		</div>
@@ -22,12 +23,12 @@
 	
 	<!-- ***検索結果が０件の場合*** -->
 	<!-- ***falseを書き換え、表示内容を記述すること*** -->
-	<th:block th:if="false">
+	<th:block th:if="${ session.emps ==  null}">
 		<div class="message">
 	<!--以下に該当する社員が存在しないときのメッセージを記述する -->
-	 	<p></p>
+	 	<p>該当する社員は存在しません。</p>
 	 <!--以下に一覧表示に戻るリンクを記述する -->
-		 <p></p>
+		<a th:href="@{/regist/input}">一覧表示に戻る</a>
 		</div>
 	</th:block>
 	<!-- ***検索結果が０件の場合 ここまで*** -->
@@ -35,20 +36,21 @@
 	<!-- ***検索結果がある場合*** -->
 	<!-- Employeeテーブルからclass名を指定すること。 -->
 	<!-- ***trueを書き換えること*** -->
-	<table class="list_table" th:if="true">
+	
+	<table class="list_table" th:if="${session.emps != null}">
 		<tr>
 			<th>社員ID</th>
 			<th>社員名</th>
 			<!-- ***管理者権限表示*** -->
 			<!-- ***trueを書き換えること*** -->
-			<th:block th:if="true">
+			<th:block th:if="${session.emps != null}">
 				<th class="gender">性別</th>
 				<th class="address">住所</th>
 				<th class="birthday">生年月日</th>
 				<th class="authority">権限</th>
 			</th:block>
 			<th class="deptName">部署名</th>
-			<th:block th:if="">
+			<th:block th:if="${session.emps != null}">
 				<th class="button">変更</th>
 				<th class="button">削除</th>
 			</th:block>
@@ -56,17 +58,13 @@
 		</tr>
 
 		<!-- ***####を書き換え、社員情報を全件出力する*** -->
-		<tr th:each="####:####">
-
-
-
-
-
-
-
-
-
-
+		<tr th:each="emp:${allemps}">
+			<th th:text="${emp.empId}"></th>
+			<th th:text="${emp.empPass}"></th>
+			<th th:text="${emp.gender}"></th>
+			<th th:text="${emp.address}"></th>
+			<th th:text="${emp.birthday}"></th>
+			<th th:text="${emp.authority}"></th>
 		</tr>
 		<!-- ***####を書き換え、社員情報を全件出力する ここまで*** -->
 	</table>
