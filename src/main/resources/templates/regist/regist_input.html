@@ -11,11 +11,10 @@
 	 <!-- class名とボタンの変更は行なわないこと。-->
 	 
 	 
-	<!-- ここからコメントアウト
 		
 		 
 	<div class="update">
-		<form th:action="/regist/check" method="post" th:object="${empForm}">
+		<form th:action="@{/regist/check}" method="post" th:object="${employeeForm}">
 				
 			<p>
 				<span th:each="error:${#fields.detailedErrors()}">
@@ -36,7 +35,6 @@
 				</div>
 			</div>
 		
-			
 			<div class="form">
 				<div class="label">性別：</div>
 				<div class="input">
@@ -80,7 +78,9 @@
 				</div>
 			</div>
 		</form>
-		<form th:action="@{/list}">
+		
+		
+		<form th:action="@{/list/all}">
 			<div class="form">
 				<div class="label"></div>
 				<div class="input">
@@ -91,7 +91,6 @@
 		
 	</div>
 	
-	ここまでコメントアウト-->
 	
 </body>
 

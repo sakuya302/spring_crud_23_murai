@@ -1,5 +1,6 @@
 package jp.co.sss.crud.controller;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import jakarta.servlet.http.HttpSession;
 import jp.co.sss.crud.entity.Department;
+import jp.co.sss.crud.entity.Employee;
 import jp.co.sss.crud.form.EmployeeForm;
 import jp.co.sss.crud.form.LoginForm;
+import jp.co.sss.crud.repository.DepartmentRepository;
 import jp.co.sss.crud.repository.EmployeeRepository;
 
 @Controller
@@ -18,18 +21,24 @@ public class IndexController {
 	
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	DepartmentRepository departmentRepository;
 
 
 	@Autowired
 	HttpSession session;
 
 	
+	//01-ログイン
 	@RequestMapping(path = "/", method = RequestMethod.GET)
 	public String index(@ModelAttribute LoginForm loginForm) {
 		session.invalidate();
 		return "index";
 	}
 	
+	
+	//02-ログアウト
 	@RequestMapping(path = "/logout", method = RequestMethod.GET)
 	public String logout(@ModelAttribute LoginForm loginForm) {
 		session.invalidate();
@@ -37,12 +46,13 @@ public class IndexController {
 	}
 	
 	
+	//03-社員一覧表示
 	@RequestMapping(path = "/login", method = RequestMethod.POST)
 	public String login(Model model,LoginForm loginform) {
 		
 		if( (employeeRepository.findByEmpIdAndEmpPass(loginform.getEmpId(), loginform.getEmpPass())) != null) {
 			session.setAttribute("user",employeeRepository.findByEmpIdAndEmpPass(loginform.getEmpId(), loginform.getEmpPass()) );
-			model.addAttribute("allemps", employeeRepository.findAll());
+			model.addAttribute("allemps", employeeRepository.findAllByOrderByEmpId());
 			
 			return "list/list";
 			
@@ -54,12 +64,22 @@ public class IndexController {
 	}
 	
 	
+	@RequestMapping(path = "/list/all", method = RequestMethod.GET)
+	public String alllist(Model model) {
+		model.addAttribute("allemps", employeeRepository.findAllByOrderByEmpId());
+		
+		return "list/list";
+	}
+	
+	
+	//04-社員名検索
 	@RequestMapping(path = "/list/empName", method = RequestMethod.GET)
 	public String nameserch(Model model, EmployeeForm empForm) {
 		model.addAttribute("allemps", employeeRepository.findByEmpNameContaining(empForm.getEmpName()));
 		
 		return "list/list";
 	}
+	
 	
 	
 	//05-部署名検索
@@ -74,6 +94,7 @@ public class IndexController {
 	}
 	
 	
+	
 	//06-社員登録
 	@RequestMapping(path = "/regist/input", method = RequestMethod.GET)
 	public String rin(@ModelAttribute EmployeeForm empForm) {
@@ -82,10 +103,77 @@ public class IndexController {
 	}
 	
 	
-	@RequestMapping(path = "/regist/check", method = RequestMethod.POST)
-	public String rche() {
+	@RequestMapping(path = "/regist/reinput", method = RequestMethod.GET)
+	public String rein(@ModelAttribute EmployeeForm empForm) {
 		
 		return "regist/regist_input";
 	}
+	
+	
+	@RequestMapping(path = "/regist/check", method = RequestMethod.POST)
+	public String rche(EmployeeForm empForm, Model model) {
+		Employee emp = new Employee();
+		
+		Department department = departmentRepository.findById(empForm.getDeptId()).get();
+		
+		BeanUtils.copyProperties(empForm, emp);
+		
+		emp.setDepartmnt(department);
+		
+		emp = employeeRepository.save(emp);
+		
+		
+		model.addAttribute("emp",emp);
+		session.setAttribute("form", empForm);
+		model.addAttribute("errMessage", "もう一度やり直してください。");
+		
+		return "regist/regist_check";
+	}
+	
+	
+	@RequestMapping(path = "/regist/complete", method = RequestMethod.POST)
+	public String rcom() {
+		
+		return "regist/regist_complete";
+	}
+	
+	
+	
+	
+	//07-社員変更
+		@RequestMapping(path = "/update/input", method = RequestMethod.GET)
+		public String uin(@ModelAttribute EmployeeForm empForm) {
+			
+			return "update/update_input";
+		}
+		
+		
+		@RequestMapping(path = "/update/check", method = RequestMethod.POST)
+		public String uche() {
+			
+			return "update/update_input";
+		}
+		
+		@RequestMapping(path = "/update/complete", method = RequestMethod.POST)
+		public String ucom() {
+			
+			return "update/update_complete";
+		}
+		
+	
+		
+		
+		//08-社員削除
+		@RequestMapping(path = "/delete/check", method = RequestMethod.GET)
+		public String dche() {
+			
+			return "delete/delete_check";
+		}
+		
+		@RequestMapping(path = "/delete/complete", method = RequestMethod.POST)
+		public String dcom() {
+			
+			return "delete/delete_complete";
+		}
 
 }
