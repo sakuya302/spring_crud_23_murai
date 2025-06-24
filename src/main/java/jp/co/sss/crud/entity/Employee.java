@@ -99,14 +99,13 @@ public class Employee {
 		this.authority = authority;
 	}
 
-	public Department getDepartmnt() {
+	public Department getDepartment() {
 		return department;
 	}
 
-	public void setDepartmnt(Department departmnt) {
-		this.department = departmnt;
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
-
 	
 
 }

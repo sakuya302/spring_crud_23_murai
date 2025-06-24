@@ -48,12 +48,11 @@
 		
 		
 		
-		<!--
-		<div class="form">
+			<div class="form">
 			<div class="label">部署名：</div>
 			<div class="input"  th:text="${emp.department.deptName}"></div>
 		</div>
-		-->
+	
 	
 		<form th:action="@{/regist/complete}" method="post" th:object="${employeeForm}">
 			<div class="form">

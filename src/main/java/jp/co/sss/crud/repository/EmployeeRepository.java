@@ -16,4 +16,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 	List<Employee> findByDepartment(Department department);
 	
 	List<Employee> findAllByOrderByEmpId();
+	
+	List<Employee> findByEmpId(Integer empId);
 }

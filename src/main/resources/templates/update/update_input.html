@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{common/layout_4block :: layout(~{::body/content()})}">
 <head>
 <meta charset="UTF-8">
 <title>会員変更入力 | シェアードショップ</title>
@@ -59,7 +60,7 @@
         <div class="form">
           <div class="label">部署名：</div>
           <div class="input">
-            <select th:field="{deptId}">
+            <select th:field="*{deptId}">
               <option value="1">営業部</option>
               <option value="2">経理部</option>
               <option value="3">総務部</option>
@@ -69,7 +70,7 @@
         <div class="form">
           <div class="label"></div>
           <div class="input">
-            <input type="hidden" th:field="####" /> <input
+            <input type="hidden" th:field="*{empId}"/> <input
               type="submit" value="変更" />
           </div>
         </div>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout_4block :: layout(~{::body/content()})}">
 <head>
 <meta charset="UTF-8">
 <title>社員削除確認 | 社員管理システム</title>
@@ -16,45 +16,44 @@
         <div class="label">社員名：</div>
         <div class="input" th:text="${emp.empName}"></div>
       </div>
-      
-      
-   
+     
+     
       <div class="form">
         <div class="label">性別：</div>
-        <div class="input" th:switch="####">
+        <div class="input" th:switch="${emp.gender}">
           <span th:case="1">男性</span>
           <span th:case="2">女性</span>
         </div>
       </div>
       <div class="form">
         <div class="label">住所：</div>
-        <div class="input" th:text="####"></div>
+        <div class="input" th:text="${emp.address}"></div>
       </div>
       <div class="form">
         <div class="label">生年月日：</div>
-        <div class="input" th:text="####"></div>
+        <div class="input" th:text="${#dates.format(emp.birthday, 'yyyy/MM/dd')}"></div>
       </div>
       <div class="form">
         <div class="label">権限：</div>
-        <div class="input" th:switch="####">
+        <div class="input" th:switch="${emp.authority}">
           <span th:case="1">一般</span>
           <span th:case="2">管理者</span>
         </div>
       </div>
       <div class="form">
         <div class="label">部署名：</div>
-        <div class="input" th:text="####"></div>
+        <div class="input" th:text="${emp.department.deptName}"></div>
       </div>
-      <form th:action="####" method="post">
+      <form th:action="@{/delete/complete}" method="post">
         <div class="form">
           <div class="label"></div>
           <div class="input">
-            <input type="hidden" name="empId" th:value="####" />
+            <input type="hidden" name="empId" th:value="${emp.empId}" />
             <input type="submit" value="削除" />
           </div>
         </div>
       </form>
-      <form th:action="@{/list/all">
+      <form th:action="@{/list/all}">
         <div class="form">
           <div class="label"></div>
           <div class="input">

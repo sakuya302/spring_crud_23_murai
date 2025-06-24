@@ -65,8 +65,9 @@ public class IndexController {
 	
 	
 	@RequestMapping(path = "/list/all", method = RequestMethod.GET)
-	public String alllist(Model model) {
+	public String alllist(Model model,EmployeeForm empForm) {
 		model.addAttribute("allemps", employeeRepository.findAllByOrderByEmpId());
+		//session.setAttribute("user",employeeRepository.findById(empForm.getEmpId()) );
 		
 		return "list/list";
 	}
@@ -105,7 +106,7 @@ public class IndexController {
 	
 	@RequestMapping(path = "/regist/reinput", method = RequestMethod.GET)
 	public String rein(@ModelAttribute EmployeeForm empForm) {
-		
+       
 		return "regist/regist_input";
 	}
 	
@@ -118,7 +119,7 @@ public class IndexController {
 		
 		BeanUtils.copyProperties(empForm, emp);
 		
-		emp.setDepartmnt(department);
+		emp.setDepartment(department);
 		
 		emp = employeeRepository.save(emp);
 		
@@ -143,15 +144,35 @@ public class IndexController {
 	//07-社員変更
 		@RequestMapping(path = "/update/input", method = RequestMethod.GET)
 		public String uin(@ModelAttribute EmployeeForm empForm) {
+			//Employee emp = employeeRepository.findById(empId).get();
 			
+			return "update/update_input";
+		}
+		
+		@RequestMapping(path = "/update/back", method = RequestMethod.GET)
+		public String uback(@ModelAttribute EmployeeForm empForm) {
+			session.invalidate();
 			return "update/update_input";
 		}
 		
 		
 		@RequestMapping(path = "/update/check", method = RequestMethod.POST)
-		public String uche() {
+		public String uche(EmployeeForm empForm, Model model) {
+			Employee emp = new Employee();
 			
-			return "update/update_input";
+			Department department = departmentRepository.findById(empForm.getDeptId()).get();
+			
+			BeanUtils.copyProperties(empForm, emp);
+			
+			emp.setDepartment(department);
+			
+			emp = employeeRepository.save(emp);
+			
+			
+			model.addAttribute("emp",emp);
+			session.setAttribute("form", empForm);
+			model.addAttribute("errMessage", "もう一度やり直してください。");
+			return "update/update_check";
 		}
 		
 		@RequestMapping(path = "/update/complete", method = RequestMethod.POST)
@@ -165,14 +186,17 @@ public class IndexController {
 		
 		//08-社員削除
 		@RequestMapping(path = "/delete/check", method = RequestMethod.GET)
-		public String dche() {
+		public String dche(EmployeeForm empForm, Model model) {
+			Employee employee = employeeRepository.findById(empForm.getEmpId()).get();
+			model.addAttribute("emp", employee);
 			
 			return "delete/delete_check";
 		}
 		
+		
 		@RequestMapping(path = "/delete/complete", method = RequestMethod.POST)
-		public String dcom() {
-			
+		public String dcom(EmployeeForm empForm) {
+			 employeeRepository.deleteById(empForm.getEmpId());
 			return "delete/delete_complete";
 		}
 
