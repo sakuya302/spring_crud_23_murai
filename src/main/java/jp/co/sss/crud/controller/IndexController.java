@@ -33,7 +33,7 @@ public class IndexController {
 	//01-ログイン
 	@RequestMapping(path = "/", method = RequestMethod.GET)
 	public String index(@ModelAttribute LoginForm loginForm) {
-		session.invalidate();
+		
 		return "index";
 	}
 	
@@ -65,10 +65,11 @@ public class IndexController {
 	
 	
 	@RequestMapping(path = "/list/all", method = RequestMethod.GET)
-	public String alllist(Model model,EmployeeForm empForm) {
+	public String alllist(Model model) {
 		model.addAttribute("allemps", employeeRepository.findAllByOrderByEmpId());
-		//session.setAttribute("user",employeeRepository.findById(empForm.getEmpId()) );
-		
+		//Employee employee = employeeRepository.findById(empForm.getEmpId()).get();
+		//session.setAttribute("user", employee);
+		//model.addAttribute("emp", employee);
 		return "list/list";
 	}
 	
@@ -106,7 +107,9 @@ public class IndexController {
 	
 	@RequestMapping(path = "/regist/reinput", method = RequestMethod.GET)
 	public String rein(@ModelAttribute EmployeeForm empForm) {
-       
+		//Employee employee = employeeRepository.findById(empForm.getEmpId()).get();
+		//model.addAttribute("emp", employee);
+		
 		return "regist/regist_input";
 	}
 	
@@ -143,15 +146,21 @@ public class IndexController {
 	
 	//07-社員変更
 		@RequestMapping(path = "/update/input", method = RequestMethod.GET)
-		public String uin(@ModelAttribute EmployeeForm empForm) {
-			//Employee emp = employeeRepository.findById(empId).get();
+		public String uin(@ModelAttribute EmployeeForm empForm,Model model) {
+			
+			Employee emp = employeeRepository.findById(empForm.getEmpId()).get();
+			
+			//BeanUtils.copyProperties(empForm, emp);
+			//empForm.setDeptId(emp.getDepartment().getDeptId());
+			
+			model.addAttribute("emp",emp);
 			
 			return "update/update_input";
 		}
 		
 		@RequestMapping(path = "/update/back", method = RequestMethod.GET)
-		public String uback(@ModelAttribute EmployeeForm empForm) {
-			session.invalidate();
+		public String uback(EmployeeForm empForm, Model model) {
+			
 			return "update/update_input";
 		}
 		
