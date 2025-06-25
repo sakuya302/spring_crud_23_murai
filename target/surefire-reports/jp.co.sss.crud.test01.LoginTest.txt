@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: jp.co.sss.crud.test01.LoginTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.327 s - in jp.co.sss.crud.test01.LoginTest
